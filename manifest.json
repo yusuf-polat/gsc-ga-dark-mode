@@ -1,0 +1,57 @@
+{
+  "manifest_version": 3,
+  "name": "GSC & GA Dark Mode",
+  "version": "1.4.0",
+  "description": "Google Search Console, Google Analytics, AdSense, Blogger ve Google Maps arayüzlerine karanlık mod ekler.",
+  "permissions": ["storage", "scripting", "activeTab"],
+  "optional_host_permissions": ["*://*/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "GSC & GA Dark Mode",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "commands": {
+    "toggle-dark-mode": {
+      "suggested_key": { "default": "Alt+Shift+D" },
+      "description": "Karanlık modu aç/kapat"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://search.google.com/*",
+        "https://analytics.google.com/*",
+        "https://adsense.google.com/*",
+        "https://www.blogger.com/*",
+        "https://www.google.com/maps*"
+      ],
+      "css": ["dark.css"],
+      "js": ["defaults.js", "content.js"],
+      "run_at": "document_start",
+      "all_frames": false
+    },
+    {
+      "matches": [
+        "https://*.google.com/*",
+        "https://*.googleusercontent.com/*",
+        "https://*.blogger.com/*"
+      ],
+      "js": ["defaults.js", "frame.js"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_origin_as_fallback": true
+    }
+  ]
+}

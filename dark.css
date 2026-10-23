@@ -1,0 +1,57 @@
+/*
+ * Filtre tabanlı karanlık mod.
+ * GSC ve GA4, sınıf adları sık değişen Angular/Material uygulamaları olduğu için
+ * tek tek renk ezmek yerine tüm sayfa ters çevrilir (invert + hue-rotate ile renk
+ * tonları korunur), ardından fotoğraf/video gibi medya tekrar ters çevrilir.
+ *
+ * Varsayılan olarak açıktır (data-gdm="off" değilse) — böylece content script
+ * ayarları okuyana kadar beyaz ekran parlaması olmaz.
+ */
+
+html:not([data-gdm="off"]) {
+  background-color: #fff !important;
+  filter: invert(var(--gdm-invert, 0.92))
+          hue-rotate(180deg)
+          contrast(var(--gdm-contrast, 0.95))
+          brightness(var(--gdm-brightness, 1)) !important;
+}
+
+/* Medyayı eski haline döndür (avatarlar, logolar, ekran görüntüleri, videolar) */
+html:not([data-gdm="off"]) img,
+html:not([data-gdm="off"]) video,
+html:not([data-gdm="off"]) [style*="background-image: url"],
+html:not([data-gdm="off"]) [style*="background-image:url"] {
+  filter: invert(1) hue-rotate(180deg) !important;
+}
+
+/* Arka plan görselli bir kapsayıcının içindeki img iki kez çevrilmesin */
+html:not([data-gdm="off"]) [style*="background-image"] img {
+  filter: none !important;
+}
+
+/*
+ * iframe'ler doğal renklerine döndürülür. Karartma kararını iframe'in içindeki
+ * frame.js verir: açık zeminli iframe kendini karartır; zaten koyu olanlara
+ * (Google hesap menüsü, yardım paneli) ve harita iframe'lerine dokunulmaz.
+ */
+html:not([data-gdm="off"]) iframe {
+  filter: invert(1) hue-rotate(180deg) !important;
+}
+
+/*
+ * AdSense ve özel siteler: AdSense ana sayfa kartları illüstrasyonu satır içi background-image olarak
+ * taşıyor, bu yüzden yukarıdaki kural kartın tamamını (metin + zemin) açık renge
+ * döndürüyordu. İçinde öğe barındıran background-image kapsayıcıları ters
+ * çevrilmez; sadece içlerindeki gerçek medya eski haline döndürülür.
+ */
+html:is([data-gdm-site="adsense"], [data-gdm-site="custom"]):not([data-gdm="off"]) [style*="background-image"]:has(*) {
+  filter: none !important;
+}
+html:is([data-gdm-site="adsense"], [data-gdm-site="custom"]):not([data-gdm="off"]) [style*="background-image"]:has(*) :is(img, video) {
+  filter: invert(1) hue-rotate(180deg) !important;
+}
+
+/* Google Maps: menüler ve paneller karanlık, harita ise doğal renklerinde */
+html[data-gdm-site="maps"]:not([data-gdm="off"]) canvas {
+  filter: invert(1) hue-rotate(180deg) !important;
+}

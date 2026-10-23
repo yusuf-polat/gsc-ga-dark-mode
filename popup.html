@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <title>GSC & GA Dark Mode</title>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      width: 260px; margin: 0; padding: 14px 16px;
+      font: 13px/1.4 system-ui, "Segoe UI", sans-serif;
+      background: #1e1f22; color: #e3e3e3;
+    }
+    h1 { font-size: 14px; margin: 0 0 12px; font-weight: 600; }
+    .row { display: flex; align-items: center; justify-content: space-between; margin: 8px 0; }
+    .row.sub { padding-left: 10px; color: #b8b8b8; }
+    .sep { border: 0; border-top: 1px solid #333; margin: 12px 0; }
+    label.slider { display: block; margin: 10px 0 2px; }
+    label.slider span { float: right; color: #8ab4f8; }
+    input[type=range] { width: 100%; accent-color: #8ab4f8; }
+    button {
+      width: 100%; margin-top: 12px; padding: 6px; border-radius: 6px;
+      border: 1px solid #444; background: #2b2d31; color: #e3e3e3; cursor: pointer;
+    }
+    button:hover { background: #35373c; }
+    .hint { margin-top: 10px; color: #888; font-size: 11px; text-align: center; }
+    /* Basit anahtar */
+    .switch { position: relative; width: 34px; height: 18px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch i {
+      position: absolute; inset: 0; border-radius: 18px; background: #555; transition: .15s;
+    }
+    .switch i::before {
+      content: ""; position: absolute; width: 14px; height: 14px; left: 2px; top: 2px;
+      border-radius: 50%; background: #fff; transition: .15s;
+    }
+    .switch input:checked + i { background: #8ab4f8; }
+    .switch input:checked + i::before { transform: translateX(16px); }
+    .disabled { opacity: .45; pointer-events: none; }
+    /* Özel siteler */
+    .host { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+    .row.sub .actions { display: flex; align-items: center; gap: 6px; }
+    .remove {
+      width: auto; margin: 0; padding: 0 6px; border: 0; background: none;
+      color: #888; font-size: 15px; line-height: 1;
+    }
+    .remove:hover { background: none; color: #f28b82; }
+    .add { display: flex; gap: 6px; margin-top: 8px; }
+    .add input {
+      flex: 1; min-width: 0; padding: 5px 7px; border-radius: 6px;
+      border: 1px solid #444; background: #2b2d31; color: #e3e3e3;
+    }
+    .add button { width: auto; margin: 0; padding: 5px 10px; }
+    #add-current { margin-top: 8px; }
+    #msg { margin-top: 6px; min-height: 1em; color: #f28b82; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <h1>🌙 GSC & GA Dark Mode</h1>
+
+  <div class="row">
+    <strong>Karanlık mod</strong>
+    <label class="switch"><input type="checkbox" id="enabled"><i></i></label>
+  </div>
+
+  <div id="details">
+    <div class="row sub">
+      Search Console
+      <label class="switch"><input type="checkbox" id="site-gsc"><i></i></label>
+    </div>
+    <div class="row sub">
+      Google Analytics
+      <label class="switch"><input type="checkbox" id="site-ga"><i></i></label>
+    </div>
+    <div class="row sub">
+      AdSense
+      <label class="switch"><input type="checkbox" id="site-adsense"><i></i></label>
+    </div>
+    <div class="row sub">
+      Blogger
+      <label class="switch"><input type="checkbox" id="site-blogger"><i></i></label>
+    </div>
+    <div class="row sub">
+      Google Maps
+      <label class="switch"><input type="checkbox" id="site-maps"><i></i></label>
+    </div>
+
+    <hr class="sep">
+
+    <div class="row"><strong>Özel siteler</strong></div>
+    <div id="custom-list"></div>
+    <button id="add-current" hidden></button>
+    <form class="add" id="add-form">
+      <input id="new-site" placeholder="ornek.com" autocomplete="off" spellcheck="false">
+      <button type="submit">Ekle</button>
+    </form>
+    <div class="hint" id="msg"></div>
+
+    <hr class="sep">
+
+    <label class="slider">Koyuluk <span id="invert-val"></span></label>
+    <input type="range" id="invert" min="70" max="100">
+
+    <label class="slider">Kontrast <span id="contrast-val"></span></label>
+    <input type="range" id="contrast" min="70" max="120">
+
+    <label class="slider">Parlaklık <span id="brightness-val"></span></label>
+    <input type="range" id="brightness" min="70" max="130">
+
+    <button id="reset">Varsayılanlara dön</button>
+  </div>
+
+  <div class="hint">Kısayol: Alt+Shift+D</div>
+
+  <script src="defaults.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
